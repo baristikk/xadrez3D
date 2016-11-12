@@ -2,7 +2,8 @@
 using tabuleiro;
 using xadrez;
 
-class util : MonoBehaviour {
+class Util : MonoBehaviour
+{
 
     public static void instanciarRei(char coluna, int linha, Cor cor, PartidaDeXadrez partida, GameObject prefab)
     {
@@ -14,7 +15,7 @@ class util : MonoBehaviour {
 
     }
 
-	public static Vector3 posicaoNaCena(char coluna, int linha)
+    public static Vector3 posicaoNaCena(char coluna, int linha)
     {
         Vector3 posChao = GameObject.Find("PlanoDasPecas").transform.position;
         Vector3 posCasa = GameObject.Find("" + coluna + linha).transform.position;
