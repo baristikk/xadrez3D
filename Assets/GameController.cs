@@ -214,8 +214,19 @@ class GameController : MonoBehaviour
         // #jogadaespecial roquegrande
         if (pecaMovida is Rei && destino.coluna == origem.coluna - 2)
         {
-            GameObject torre = partida.tab.peca(pos.linha, pos.coluna + 1).obj;
+            GameObject torre = partida.tab.peca(pos.linha, pos.coluna +  1).obj;
             torre.transform.position = Util.posicaoNaCena('d', origem.linha);
+        }
+
+        // #jogada promocao 
+        if (partida.promovida !=null)
+        {
+            removerObjetoCapturado(partida.promovida);
+            Vector3 posPromovida = Util.posicaoNaCena(destino.coluna, destino.linha);
+            GameObject prefab = (pecaMovida.cor == Cor.Branca) ? DamaBranca : DamaPreta;
+            GameObject dama = Instantiate(prefab, posPromovida, Quaternion.identity) as GameObject;
+            pecaMovida.obj = dama;
+            
         }
         }
 }
