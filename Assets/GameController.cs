@@ -10,6 +10,16 @@ class GameController : MonoBehaviour
     public GameObject reiPreto = null;
     public GameObject torreBranca = null;
     public GameObject torrePreta = null;
+    public GameObject DamaBranca = null;
+    public GameObject DamaPreta = null;
+    public GameObject PeaoPreto = null;
+    public GameObject PeaoBranco = null;
+    public GameObject bispoBranco = null;
+    public GameObject bispoPreto = null;
+    public GameObject cavaloBranco = null;
+    public GameObject cavaloPreto = null;
+
+
 
 
     public Text txtMsg = null;
@@ -40,6 +50,19 @@ class GameController : MonoBehaviour
         InformarAguardando();
 
 
+        Util.instanciarCavalo('b', 1, Cor.Branca, partida, cavaloBranco);
+        Util.instanciarCavalo('g', 1, Cor.Branca, partida, cavaloBranco);
+        Util.instanciarBispo('f', 1, Cor.Branca, partida, bispoBranco);
+        Util.instanciarBispo('c', 1, Cor.Branca, partida, bispoBranco);
+        Util.instanciarDama('d', 1, Cor.Branca, partida, DamaBranca);
+        Util.instanciarPeao('a', 2, Cor.Branca, partida, PeaoBranco);
+        Util.instanciarPeao('b', 2, Cor.Branca, partida, PeaoBranco);
+        Util.instanciarPeao('c', 2, Cor.Branca, partida, PeaoBranco);
+        Util.instanciarPeao('d', 2, Cor.Branca, partida, PeaoBranco);
+        Util.instanciarPeao('e', 2, Cor.Branca, partida, PeaoBranco);
+        Util.instanciarPeao('f', 2, Cor.Branca, partida, PeaoBranco);
+        Util.instanciarPeao('g', 2, Cor.Branca, partida, PeaoBranco);
+        Util.instanciarPeao('h', 2, Cor.Branca, partida, PeaoBranco);
         Util.instanciarRei('e', 1, Cor.Branca, partida, reiBranco);
         Util.instanciarTorre('a', 1, Cor.Branca, partida, torreBranca);
         Util.instanciarTorre('h', 1, Cor.Branca, partida, torreBranca);
@@ -47,7 +70,20 @@ class GameController : MonoBehaviour
         Util.instanciarRei('e', 8, Cor.Preta, partida, reiPreto);
         Util.instanciarTorre('a', 8, Cor.Preta, partida, torrePreta);
         Util.instanciarTorre('h', 8, Cor.Preta, partida, torrePreta);
-        
+        Util.instanciarCavalo('b', 8, Cor.Preta, partida, cavaloPreto);
+        Util.instanciarCavalo('g', 8, Cor.Preta, partida, cavaloPreto);
+        Util.instanciarBispo('c', 8, Cor.Preta, partida, bispoPreto);
+        Util.instanciarBispo('f', 8, Cor.Preta, partida, bispoPreto);
+        Util.instanciarDama('d', 8, Cor.Preta, partida, DamaPreta);
+        Util.instanciarPeao('a', 7, Cor.Preta, partida, PeaoPreto);
+        Util.instanciarPeao('b', 7, Cor.Preta, partida, PeaoPreto);
+        Util.instanciarPeao('c', 7, Cor.Preta, partida, PeaoPreto);
+        Util.instanciarPeao('d', 7, Cor.Preta, partida, PeaoPreto);
+        Util.instanciarPeao('e', 7, Cor.Preta, partida, PeaoPreto);
+        Util.instanciarPeao('f', 7, Cor.Preta, partida, PeaoPreto);
+        Util.instanciarPeao('g', 7, Cor.Preta, partida, PeaoPreto);
+        Util.instanciarPeao('h', 7, Cor.Preta, partida, PeaoPreto);
+
     }
     public void processarMouseDown(GameObject peca, GameObject casa)
     {
