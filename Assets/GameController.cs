@@ -23,11 +23,16 @@ class GameController : MonoBehaviour
     PosicaoXadrez origem, destino;
     Color corOriginal;
 
+    Vector3 posDescaerteBrancas, posDescartePretas;
+
     void Start()
     {
         estado = Estado.AguardandoJogada;
         pecaEscolhida = null;
         corOriginal = txtMsg.color;
+
+        posDescaerteBrancas = new Vector3(-8.5f, 0f, -9f);
+        posDescartePretas = new Vector3(8.5f, 0f, 9f); 
 
         partida = new PartidaDeXadrez();
 
@@ -86,8 +91,12 @@ class GameController : MonoBehaviour
                         destino = new PosicaoXadrez(coluna, linha);
 
                         partida.validarPosicaoDeDestino(origem.toPosicao(), destino.toPosicao());
-                        partida.realizaJogada(origem.toPosicao(), destino.toPosicao());
+                        Peca pecaCapturada = partida.realizaJogada(origem.toPosicao(), destino.toPosicao());
 
+                        if( pecaCapturada != null)
+                        {
+                            removerObjetoCapturado(pecaCapturada);
+                        }
                         peca.transform.position = Util.posicaoNaCena(coluna, linha);
 
                         pecaEscolhida = null;
@@ -135,5 +144,20 @@ class GameController : MonoBehaviour
     {
         txtMsg.color = corOriginal;
         txtMsg.text = "Aguardando jogada: " + partida.jogadorAtual;
+    }
+
+    void removerObjetoCapturado(Peca peca)
+    {
+        GameObject obj = peca.obj;
+        if (peca.cor == Cor.Branca)
+        {
+            obj.transform.position = posDescaerteBrancas;
+            posDescaerteBrancas.z = posDescaerteBrancas.z + 1.5f;
+        }
+        else
+        {
+            obj.transform.position = posDescartePretas;
+            posDescartePretas.z = posDescartePretas.z - 1.5f;
+        }
     }
 }

@@ -127,7 +127,7 @@ namespace xadrez
 
         }
 
-        public void realizaJogada(Posicao origem, Posicao destino)
+        public Peca realizaJogada(Posicao origem, Posicao destino)
         {
             Peca pecaCapturada = executaMovimento(origem, destino);
 
@@ -181,6 +181,8 @@ namespace xadrez
             {
                 vulneravelEnPassant = null;
             }
+
+            return pecaCapturada;
         }
 
         public void validarPosicaoDeOrigem(Posicao pos)
