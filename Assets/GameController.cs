@@ -8,6 +8,9 @@ class GameController : MonoBehaviour
 
     public GameObject reiBranco = null;
     public GameObject reiPreto = null;
+    public GameObject torreBranca = null;
+    public GameObject torrePreta = null;
+
 
     public Text txtMsg = null;
     public Text txtXeque = null;
@@ -33,7 +36,12 @@ class GameController : MonoBehaviour
 
 
         Util.instanciarRei('e', 1, Cor.Branca, partida, reiBranco);
+        Util.instanciarTorre('a', 1, Cor.Branca, partida, torreBranca);
+        Util.instanciarTorre('h', 1, Cor.Branca, partida, torreBranca);
         Util.instanciarRei('e', 8, Cor.Preta, partida, reiPreto);
+        Util.instanciarTorre('a', 8, Cor.Preta, partida, torrePreta);
+        Util.instanciarTorre('h', 8, Cor.Preta, partida, torrePreta);
+
     }
     public void processarMouseDown(GameObject peca, GameObject casa)
     {
@@ -90,7 +98,7 @@ class GameController : MonoBehaviour
                         peca.transform.position = Util.posicaoNaCena(origem.coluna, origem.linha);
                         estado = Estado.AguardandoJogada;
                         InformarAviso(e.Message);
-                    }
+                    }   
                 }
             }
         }
