@@ -2,6 +2,7 @@
 using tabuleiro;
 using xadrez;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 class GameController : MonoBehaviour
 {
@@ -35,11 +36,16 @@ class GameController : MonoBehaviour
 
     Vector3 posDescaerteBrancas, posDescartePretas;
 
+    public GameObject particulas;
+
+    List<GameObject> listaParticulas;
+
     void Start()
     {
         estado = Estado.AguardandoJogada;
         pecaEscolhida = null;
         corOriginal = txtMsg.color;
+        listaParticulas = new List<GameObject>();
 
         posDescaerteBrancas = new Vector3(-8.5f, 0f, -9f);
         posDescartePretas = new Vector3(8.5f, 0f, 9f);
@@ -100,6 +106,7 @@ class GameController : MonoBehaviour
                     pecaEscolhida = obj;
                     estado = Estado.Arrastando;
                     txtMsg.text = "Selecione a casa de destino";
+                    instanciarParticulas();
                 }
                 catch (TabuleiroException e)
                 {
@@ -169,7 +176,10 @@ class GameController : MonoBehaviour
                     estado = Estado.AguardandoJogada;
                     InformarAviso(e.Message);
                 }
-
+                finally
+                {
+                    destruirParticulas();
+                }
             }
         }
     }
@@ -242,5 +252,35 @@ class GameController : MonoBehaviour
         {
             Camera.main.GetComponent<CameraRotacao>().irParaPreta ();
         }
+    }
+    void instanciarParticulas()
+    {
+        listaParticulas.Clear();
+        float y = GameObject.Find("PlanoDasPecas").transform.position.y;
+
+        bool[ , ] mat =  partida.tab.peca(origem.toPosicao()).movimentosPossiveis();
+        for (int i = 0; i<partida.tab.linhas; i++)
+        {
+            for (int j = 0; j <partida.tab.colunas; i++ )
+            {
+                if (mat[i,j])
+                {
+                    char coluna = (char) ('a' + j);
+                    int linha = 8 - i;
+                    Vector3 posCasa = GameObject.Find("" + coluna + linha).transform.position;
+                    Vector3 pos = new Vector3(posCasa.x, y, posCasa.z);
+                    GameObject obj = Instantiate(particulas, pos, Quaternion.identity) as GameObject;
+                    listaParticulas.Add(obj);
+                }
+            }
+        }
+    }
+    void destruirParticulas()
+    {
+        foreach (GameObject obj in listaParticulas)
+        {
+            Destroy(obj);
+        }
+        listaParticulas.Clear();
     }
 }
