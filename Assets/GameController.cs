@@ -42,7 +42,7 @@ class GameController : MonoBehaviour
         corOriginal = txtMsg.color;
 
         posDescaerteBrancas = new Vector3(-8.5f, 0f, -9f);
-        posDescartePretas = new Vector3(8.5f, 0f, 9f); 
+        posDescartePretas = new Vector3(8.5f, 0f, 9f);
 
         partida = new PartidaDeXadrez();
 
@@ -66,7 +66,7 @@ class GameController : MonoBehaviour
         Util.instanciarRei('e', 1, Cor.Branca, partida, reiBranco);
         Util.instanciarTorre('a', 1, Cor.Branca, partida, torreBranca);
         Util.instanciarTorre('h', 1, Cor.Branca, partida, torreBranca);
-       
+
         Util.instanciarRei('e', 8, Cor.Preta, partida, reiPreto);
         Util.instanciarTorre('a', 8, Cor.Preta, partida, torrePreta);
         Util.instanciarTorre('h', 8, Cor.Preta, partida, torrePreta);
@@ -85,7 +85,7 @@ class GameController : MonoBehaviour
         Util.instanciarPeao('h', 7, Cor.Preta, partida, PeaoPreto);
 
     }
-    public void processarMouseDown(GameObject peca, GameObject casa)
+    public void processarMouseDown(GameObject obj, GameObject casa)
     {
         if (estado == Estado.AguardandoJogada)
         {
@@ -97,9 +97,9 @@ class GameController : MonoBehaviour
                     int linha = casa.name[1] - '0';
                     origem = new PosicaoXadrez(coluna, linha);
                     partida.validarPosicaoDeOrigem(origem.toPosicao());
-                    pecaEscolhida = peca;
+                    pecaEscolhida = obj;
                     estado = Estado.Arrastando;
-                    txtMsg.text = "Solte a peça na casa de destino";
+                    txtMsg.text = "Selecione a casa de destino";
                 }
                 catch (TabuleiroException e)
                 {
@@ -107,66 +107,68 @@ class GameController : MonoBehaviour
                 }
             }
         }
-    }
-    public void processarMouseUp(GameObject peca, GameObject casa)
-    {
-        if (estado == Estado.Arrastando)
+        else if (estado == Estado.Arrastando)
         {
-            
-            if (casa != null)
+            GameObject casaDestino = null;
+            if (obj.layer == LayerMask.NameToLayer("Casas"))
             {
-                
-                if (pecaEscolhida != null && pecaEscolhida == peca)
+                casaDestino = obj;
+            }
+            else
+            {
+                casaDestino = casa;
+            }
+            if (casaDestino != null && pecaEscolhida != null)
+            {
+                try
                 {
-                    try
+
+                    char coluna = casaDestino.name[0];
+                    int linha = casaDestino.name[1] - '0';
+                    destino = new PosicaoXadrez(coluna, linha);
+
+                    partida.validarPosicaoDeDestino(origem.toPosicao(), destino.toPosicao());
+                    Peca pecaCapturada = partida.realizaJogada(origem.toPosicao(), destino.toPosicao());
+
+                    if (pecaCapturada != null)
                     {
-                        
-                        char coluna = casa.name[0];
-                        int linha = casa.name[1] - '0';
-                        destino = new PosicaoXadrez(coluna, linha);
+                        removerObjetoCapturado(pecaCapturada);
+                    }
+                    pecaEscolhida.transform.position = Util.posicaoNaCena(coluna, linha);
 
-                        partida.validarPosicaoDeDestino(origem.toPosicao(), destino.toPosicao());
-                        Peca pecaCapturada = partida.realizaJogada(origem.toPosicao(), destino.toPosicao());
 
-                        if( pecaCapturada != null)
+                    tratarJogadasEspeciais();
+
+                    pecaEscolhida = null;
+
+                    if (partida.terminada)
+                    {
+                        estado = Estado.GameOver;
+                        txtMsg.text = "Vencedor: " + partida.jogadorAtual;
+                        txtXeque.text = "XEQUEMATE";
+                    }
+                    else
+                    {
+                        estado = Estado.AguardandoJogada;
+                        InformarAguardando();
+                        if (partida.xeque)
                         {
-                            removerObjetoCapturado(pecaCapturada);
-                        }
-                        peca.transform.position = Util.posicaoNaCena(coluna, linha);
 
-
-                        tratarJogadasEspeciais();
-
-                        pecaEscolhida = null;
-                       
-                        if (partida.terminada)
-                        {
-                            estado = Estado.GameOver;
-                            txtMsg.text = "Vencedor: " + partida.jogadorAtual;
-                            txtXeque.text = "XEQUEMATE";
+                            txtXeque.text = "XEQUE";
                         }
                         else
                         {
-                            estado = Estado.AguardandoJogada;
-                            InformarAguardando();
-                            if (partida.xeque)
-                            {
-
-                                txtXeque.text = "XEQUE";
-                            }
-                            else
-                            {
-                                txtXeque.text = "";
-                            }
+                            txtXeque.text = "";
                         }
                     }
-                    catch (TabuleiroException e)
-                    {
-                        peca.transform.position = Util.posicaoNaCena(origem.coluna, origem.linha);
-                        estado = Estado.AguardandoJogada;
-                        InformarAviso(e.Message);
-                    }   
                 }
+                catch (TabuleiroException e)
+                {
+                    pecaEscolhida.transform.position = Util.posicaoNaCena(origem.coluna, origem.linha);
+                    estado = Estado.AguardandoJogada;
+                    InformarAviso(e.Message);
+                }
+
             }
         }
     }
@@ -214,19 +216,20 @@ class GameController : MonoBehaviour
         // #jogadaespecial roquegrande
         if (pecaMovida is Rei && destino.coluna == origem.coluna - 2)
         {
-            GameObject torre = partida.tab.peca(pos.linha, pos.coluna +  1).obj;
+            GameObject torre = partida.tab.peca(pos.linha, pos.coluna + 1).obj;
             torre.transform.position = Util.posicaoNaCena('d', origem.linha);
         }
 
         // #jogada promocao 
-        if (partida.promovida !=null)
+        if (partida.promovida != null)
         {
             removerObjetoCapturado(partida.promovida);
             Vector3 posPromovida = Util.posicaoNaCena(destino.coluna, destino.linha);
             GameObject prefab = (pecaMovida.cor == Cor.Branca) ? DamaBranca : DamaPreta;
             GameObject dama = Instantiate(prefab, posPromovida, Quaternion.identity) as GameObject;
             pecaMovida.obj = dama;
-            
+
         }
-        }
+    }
+
 }
