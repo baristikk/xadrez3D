@@ -151,6 +151,7 @@ class GameController : MonoBehaviour
                     {
                         estado = Estado.AguardandoJogada;
                         InformarAguardando();
+                        Invoke("girarCamera", 0.5f);
                         if (partida.xeque)
                         {
 
@@ -231,5 +232,15 @@ class GameController : MonoBehaviour
 
         }
     }
-
+    void girarCamera()
+    {
+        if(partida.jogadorAtual == Cor.Branca)
+        {
+            Camera.main.GetComponent<CameraRotacao>().irParaBranca();
+        }
+        else
+        {
+            Camera.main.GetComponent<CameraRotacao>().irParaPreta ();
+        }
+    }
 }
