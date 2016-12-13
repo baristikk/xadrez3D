@@ -261,7 +261,7 @@ class GameController : MonoBehaviour
         bool[ , ] mat =  partida.tab.peca(origem.toPosicao()).movimentosPossiveis();
         for (int i = 0; i<partida.tab.linhas; i++)
         {
-            for (int j = 0; j <partida.tab.colunas; i++ )
+            for (int j = 0; j <partida.tab.colunas; j++)
             {
                 if (mat[i,j])
                 {
